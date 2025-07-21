@@ -8,8 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Link to Swiper's CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-        /* 自定义 Tailwind 配置 */
+        /* Custom Tailwind Config */
         tailwind.config = {
             theme: {
                 extend: {
@@ -25,7 +27,7 @@
             }
         }
 
-        /* 全局样式 */
+        /* Global Styles */
         body {
             background-color: #f8f9fa;
             color: #1e2329;
@@ -42,14 +44,14 @@
             outline: none;
         }
 
-        /* 品牌色相关的样式 */
+        /* Brand Color Styles */
         .brand-text { color: #00cfb6; }
         .brand-bg { background-color: #00cfb6; }
         .brand-border { border-color: #00cfb6; }
         .brand-hover:hover { color: #00a692; }
         .brand-icon-bg { background-color: #e6f9f7; }
 
-        /* 卡片样式 */
+        /* Card Styles */
         .info-card {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
             position: relative;
@@ -58,32 +60,50 @@
         .info-card:hover {
             transform: translateY(-4px);
             z-index: 10;
+            background-color: #ffffff; /* Add background to prevent border blending */
         }
         
-        /* 轮播导航点样式 */
-        .carousel-dot { width: 12px; height: 4px; border-radius: 2px; background-color: #e5e7eb; transition: background-color 0.3s ease; }
-        .carousel-dot.active { background-color: #374151; }
-        .carousel-arrow { color: #6b7280; transition: color 0.3s ease; }
-        .carousel-arrow:hover { color: #111827; }
+        /* Swiper Pagination Styles */
+        .swiper-pagination-bullet {
+            width: 12px;
+            height: 4px;
+            border-radius: 2px;
+            background-color: #e5e7eb;
+            opacity: 1;
+            transition: background-color 0.3s ease;
+        }
+        .swiper-pagination-bullet-active {
+            background-color: #374151;
+        }
+        .dark .swiper-pagination-bullet {
+            background-color: #4b5563;
+        }
+        .dark .swiper-pagination-bullet-active {
+            background-color: #d1d5db;
+        }
+        
+        /* Custom Swiper Navigation */
+        .swiper-button-prev,
+        .swiper-button-next {
+            position: static; /* Override default absolute positioning */
+            width: 20px;
+            height: 20px;
+            margin: 0;
+        }
+        /* Hide the default Swiper arrows since we are using custom SVGs */
+        .swiper-button-prev::after,
+        .swiper-button-next::after {
+            display: none;
+        }
 
-        /* 手风琴样式 */
+
+        /* Accordion Styles */
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
         .accordion-button svg { transition: transform 0.3s ease; }
         .accordion-button.open svg { transform: rotate(180deg); }
         .accordion-button.open .plus-icon { transform: rotate(45deg); }
         
-        /* --- 轮播图滑动优化 START --- */
-        #carousel-track { 
-            cursor: grab; 
-            /* 关键优化1: 告知浏览器此区域的水平滑动由JS处理，但允许原生垂直滚动。这是解决移动端滑动冲突的现代最佳实践。 */
-            touch-action: pan-y;
-            /* 关键优化2: 告知浏览器 transform 属性会频繁变化，以便进行硬件加速优化。 */
-            will-change: transform;
-        }
-        /* --- 轮播图滑动优化 END --- */
-
-
-        /* 导航栏下拉菜单动画 */
+        /* Dropdown Menu Animation */
         .dropdown-menu {
             opacity: 0;
             transform: translateY(10px);
@@ -104,23 +124,21 @@
             transform: rotate(180deg);
         }
 
-        /* Logo 切换 */
+        /* Logo Toggle */
         .light-logo { display: block; }
         .dark-logo { display: none; }
 
 
-        /* --- 黑夜模式样式 --- */
+        /* --- Dark Mode Styles --- */
         body.dark { background-color: #000000; color: #e5e7eb; }
         .dark .top-nav { background-color: #1e2329; border-bottom-color: #4b5563;}
         .dark .light-logo { display: none; }
         .dark .dark-logo { display: block; }
         .dark .top-nav a, .dark .top-nav button { color: #e5e7eb; }
         
-        /* --- 修改 START: 统一导航栏悬停颜色 --- */
         .top-nav a:hover, .top-nav button:hover {
             color: #00cfb6;
         }
-        /* --- 修改 END --- */
 
         .dark .top-nav .dropdown-menu { background-color: #2d3748; border-color: #4b5563; }
         .dark .top-nav .dropdown-menu a { color: #e5e7eb; }
@@ -141,22 +159,19 @@
         .dark input[type="search"]::placeholder { color: #9ca3af; }
         .dark .brand-icon-bg { background-color: #374151; }
         .dark .brand-text { color: #00cfb6; }
-        .dark .carousel-arrow { color: #9ca3af; }
-        .dark .carousel-arrow:hover { color: #f9fafb; }
-        .dark .carousel-dot { background-color: #4b5563; }
-        .dark .carousel-dot.active { background-color: #d1d5db; }
         .dark footer .community-icons a { color: #ffffff; }
         .dark footer .community-icons a:hover { color: #00cfb6; }
         .dark footer .accordion-button, .dark footer .text-gray-500 { color: #d1d5db; }
         .dark .info-card:hover {
             box-shadow: 0 8px 24px rgba(255, 255, 255, 0.08);
+            background-color: #1e2329; /* Add background for dark mode hover */
         }
 
         .info-card p {
             display: block !important;
         }
         
-        /* 新版黑夜模式开关样式 */
+        /* Dark Mode Switch Styles */
         .dark-mode-thumb {
             background-color: #ffffff;
             transition: transform 0.2s ease-in-out;
@@ -174,7 +189,7 @@
     </style>
 </head>
 <body class="font-sans">
-    <!-- The rest of your HTML body remains unchanged -->
+    <!-- Navigation Bar -->
     <nav class="top-nav bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -185,10 +200,7 @@
                     </div>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <!-- 修改: 移除了 hover:text-brand-dark 类 -->
                             <a href="https://www.100ex.com/zh_CN/market" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">市场行情</a>
-                            
-                            <!-- 现货交易 Dropdown -->
                             <div class="relative group">
                                 <button class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold flex items-center">
                                     <span>现货交易</span>
@@ -200,10 +212,7 @@
                                     <a href="https://www.100ex.com/zh_CN/trade?tradeType=3" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">网格交易</a>
                                 </div>
                             </div>
-
                             <a href="https://futures.100ex.com/zh_CN" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">合约交易</a>
-                            
-                            <!-- C2C交易 Dropdown -->
                             <div class="relative group">
                                 <button class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold flex items-center">
                                     <span>C2C交易</span>
@@ -215,7 +224,6 @@
                                     <a href="https://otc.100ex.com/zh_CN/C2C/applyMerchant" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">申请商户</a>
                                 </div>
                             </div>
-
                             <a href="https://www.100ex.com/zh_CN/finance" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">金融理财</a>
                             <a href="https://www.100ex.com/zh_CN/BYB" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">BYB 专区</a>
                             <a href="#" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">抵押借贷</a>
@@ -286,6 +294,8 @@
             </div>
         </div>
     </nav>
+
+    <!-- Header -->
     <header class="welcome-header relative text-center py-12 sm:py-20">
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-2xl font-bold text-gray-600">欢迎访问</h2>
@@ -311,47 +321,221 @@
     <div class="main-container-bg bg-white">
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 py-12 sm:py-16">
 
+            <!-- Self-Service Section with Swiper Carousel -->
             <section>
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">自助服务</h2>
                     <a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a>
                 </div>
                 
-                <div id="self-service-carousel" class="relative">
-                    <div class="overflow-hidden pt-2 -mt-2">
-                        <div id="carousel-track" class="flex">
-                            <div class="carousel-slide w-full flex-shrink-0 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">注册与下载指南</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">iOS/安卓下载教程及注册流程，含海外 ID 切换说明</p></div></div></a>
-                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div><div><h3 class="font-semibold text-sm sm:text-base">账号与安全设置</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">设置资金密码、谷歌验证、面容识别、手势密码等</p></div></div></a>
-                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg></div><div><h3 class="font-semibold text-sm sm:text-base">身份认证（KYC）</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">完成个人实名认证，提升账户安全等级</p></div></div></a>
-                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">验证码与验证器问题</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">验证码收不到、谷歌验证器重置等处理方式</p></div></div></a>
-                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">充值与提现</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">充值不到账、提币失败、内部转账等</p></div></div></a>
-                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">交易操作指南</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">现货、合约等交易流程，含资金划转</p></div></div></a>
-                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">合约交易问答</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">张数、保证金、资金费率、回报率等核心概念解读</p></div></div></a>
-                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><polyline points="20 12 20 22 4 22 4 12"/><rect width="20" height="5" x="2" y="7"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">活动与奖励公告</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">最新活动说明、参与条件、奖励发放公示</p></div></div></a>
+                <!-- MODIFIED: Added pt-2 to give space for card hover effect -->
+                <div class="swiper pt-2" id="self-service-carousel">
+                    <div class="swiper-wrapper">
+                        <!-- Slide 1: First 8 Cards -->
+                        <div class="swiper-slide">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                                <!-- Card 1 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                      <div class="brand-icon-bg p-2 rounded-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="brand-text"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-4 5 5m0 0 5-5m-5 5V3"/></svg>
+                                      </div>
+                                      <div>
+                                        <h3 class="font-semibold text-sm sm:text-base">注册与下载指南</h3>
+                                        <p class="hidden sm:block text-sm text-gray-500 mt-1">iOS/安卓下载教程及注册流程，含海外 ID 切换说明</p>
+                                      </div>
+                                    </div>
+                                </a>
+                                <!-- Card 2 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                      <div class="brand-icon-bg p-2 rounded-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="brand-text"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4.8-10V5l8-3.8 7c0 6.8 0 10 8 10.8V17c0 2.2-8 5-8 5z"/></svg>
+                                      </div>
+                                      <div>
+                                        <h3 class="font-semibold text-sm sm:text-base">账户安全设置</h3>
+                                        <p class="hidden sm:block text-sm text-gray-500 mt-1">绑定邮箱手机、设置密码、开启谷歌验证</p>
+                                      </div>
+                                    </div>
+                                </a>
+                                <!-- Card 3 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                      <div class="brand-icon-bg p-2 rounded-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="brand-text"><path stroke-linecap="round" stroke-linejoin="round" d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                      </div>
+                                      <div>
+                                        <h3 class="font-semibold text-sm sm:text-base">身份认证</h3>
+                                        <p class="hidden sm:block text-sm text-gray-500 mt-1">提交身份证件信息以提升账户等级和安全性</p>
+                                      </div>
+                                    </div>
+                                </a>
+                                <!-- Card 4 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                      <div class="brand-icon-bg p-2 rounded-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="brand-text"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8m10 12a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>
+                                      </div>
+                                      <div>
+                                        <h3 class="font-semibold text-sm sm:text-base">充值与提现</h3>
+                                        <p class="hidden sm:block text-sm text-gray-500 mt-1">链上确认时间、到账异常、最小限额等问题</p>
+                                      </div>
+                                    </div>
+                                </a>
+                                <!-- Card 5 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">验证码与验证器问题</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">验证码收不到、谷歌验证器重置等处理方式</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Card 6 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">交易操作指南</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">现货、合约等交易流程，含资金划转</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Card 7 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">合约交易问答</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">张数、保证金、资金费率、回报率等核心概念解读</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Card 8 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><polyline points="20 12 20 22 4 22 4 12"/><rect width="20" height="5" x="2" y="7"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">活动与奖励公告</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">最新活动说明、参与条件、奖励发放公示</p>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
-                            <div class="carousel-slide w-full flex-shrink-0 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">C2C 交易</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">C2C 买卖流程、订单风控与申诉处理</p></div></div></a>
-                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M9 15H8A5 5 0 0 1 3 10V9A5 5 0 0 1 8 4h2"/><path d="M15 9h1a5 5 0 0 1 5 5v1a5 5 0 0 1-5 5h-2"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">批量转账</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">支持按 UID 批量发起内部转账，适用于多账户资金划转</p></div></div></a>
-                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M10 10v0c-1.16-.02-2.2.85-2.2 2 0 1.15.98 2.01 2.2 2 1.22-.01 2.2-.86 2.2-2 0-1.15-1.03-2.02-2.2-2Z"/><path d="M15.65 8.65A5.5 5.5 0 0 0 12 6c-3.04 0-5.5 2.46-5.5 5.5 0 2.22 1.32 4.13 3.2 5.01"/><path d="M18 6c-1.18 0-2.25.54-2.29 1.35"/><path d="M22 12c0 4.42-3.58 8-8 8a8 8 0 0 1-8-8c0-4.42 3.58-8 8-8 1.18 0 2.29.26 3.32.72"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">金融理财</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">活期、定期、余额宝等理财功能的参与方式与规则</p></div></div></a>
-                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="m12 14 4-4"/><path d="M12 14 8 10"/><path d="M12 14V2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5Z"/><path d="M12 14v8"/><path d="M7 22h10"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">抵押借贷</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">使用加密资产作为抵押，获取 USDT 借贷额度</p></div></div></a>
-                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">推广返佣计划</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">邀请好友赚返佣，查看邀请记录和返佣比</p></div></div></a>
-                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">手续费与费率说明</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">吃单/挂单、充提、合约等手续费标准说明</p></div></div></a>
+                        </div>
+                        <!-- Slide 2: Remaining 6 Cards -->
+                        <div class="swiper-slide">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                                <!-- Card 9 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">C2C 交易</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">C2C 买卖流程、订单风控与申诉处理</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Card 10 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M9 15H8A5 5 0 0 1 3 10V9A5 5 0 0 1 8 4h2"/><path d="M15 9h1a5 5 0 0 1 5 5v1a5 5 0 0 1-5 5h-2"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">批量转账</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">支持按 UID 批量发起内部转账，适用于多账户资金划转</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Card 11 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M10 10v0c-1.16-.02-2.2.85-2.2 2 0 1.15.98 2.01 2.2 2 1.22-.01 2.2-.86 2.2-2 0-1.15-1.03-2.02-2.2-2Z"/><path d="M15.65 8.65A5.5 5.5 0 0 0 12 6c-3.04 0-5.5 2.46-5.5 5.5 0 2.22 1.32 4.13 3.2 5.01"/><path d="M18 6c-1.18 0-2.25.54-2.29 1.35"/><path d="M22 12c0 4.42-3.58 8-8 8a8 8 0 0 1-8-8c0-4.42 3.58-8 8-8 1.18 0 2.29.26 3.32.72"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">金融理财</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">活期、定期、余额宝等理财功能的参与方式与规则</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Card 12 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="m12 14 4-4"/><path d="M12 14 8 10"/><path d="M12 14V2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5Z"/><path d="M12 14v8"/><path d="M7 22h10"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">抵押借贷</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">使用加密资产作为抵押，获取 USDT 借贷额度</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Card 13 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">推广返佣计划</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">邀请好友赚返佣，查看邀请记录和返佣比</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Card 14 -->
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
+                                    <div class="flex items-start space-x-3 sm:space-x-4">
+                                        <div class="brand-icon-bg p-2 rounded-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-sm sm:text-base">手续费与费率说明</h3>
+                                            <p class="hidden sm:block text-sm text-gray-500 mt-1">吃单/挂单、充提、合约等手续费标准说明</p>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-center items-center mt-6 space-x-4">
-                        <button id="prev-btn" class="carousel-arrow">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    
+                    <!-- Custom Navigation Container -->
+                    <div class="flex justify-center items-center mt-8 space-x-6">
+                        <!-- Prev Arrow -->
+                        <button class="swiper-button-prev text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex items-center justify-center">
+                            <span class="sr-only">Previous slide</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
                         </button>
-                        <div id="carousel-dots" class="flex items-center space-x-2"></div>
-                        <button id="next-btn" class="carousel-arrow">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        
+                        <!-- Pagination Dots -->
+                        <div class="swiper-pagination !static !w-auto"></div>
+                        
+                        <!-- Next Arrow -->
+                        <button class="swiper-button-next text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex items-center justify-center">
+                            <span class="sr-only">Next slide</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
                         </button>
                     </div>
                 </div>
             </section>
 
+            <!-- FAQ Section (Mobile) -->
             <section class="lg:hidden space-y-4">
                 <div class="flex justify-between items-center mb-2">
                     <h2 class="text-2xl font-bold">常见问题</h2>
@@ -381,6 +565,7 @@
                 </div>
             </section>
             
+            <!-- FAQ Section (Desktop) -->
             <section class="hidden lg:block">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold">常见问题</h2>
@@ -402,6 +587,7 @@
                 </div>
             </section>
 
+            <!-- Other Guides Section -->
             <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">佰易钱包指南</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">钱包专业模式简介</a></li><li><a href="#">如何使用钱包</a></li></ul></div>
                 <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">实名认证</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">如何完成个人认证</a></li><li><a href="#">企业认证全流程</a></li></ul></div>
@@ -409,6 +595,7 @@
                 <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">安全指南</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">2FA 安全提示</a></li><li><a href="#">如何防范网络钓鱼</a></li></ul></div>
             </section>
 
+            <!-- More Help Section -->
             <section>
                 <h2 class="text-2xl font-bold text-center mb-8">需要更多帮助？</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -433,6 +620,7 @@
 
         </main>
 
+        <!-- Footer -->
         <footer class="border-t border-gray-200 pt-16 pb-8">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="hidden lg:grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8">
@@ -525,7 +713,6 @@
             const darkModeSwitchMobile = document.getElementById('darkModeSwitchMobile');
             const navDarkModeToggle = document.getElementById('nav-dark-mode-toggle');
             const mobileDarkModeToggle = document.getElementById('mobile-dark-mode-toggle');
-
             const body = document.body;
 
             const syncSwitches = (isChecked) => {
@@ -541,7 +728,6 @@
                     body.classList.remove('dark');
                     syncSwitches(false);
                 }
-                // Dispatch a custom event for other scripts (like the carousel) to listen to
                 window.dispatchEvent(new CustomEvent('themeChanged'));
             };
             
@@ -556,21 +742,17 @@
             if (navDarkModeToggle) navDarkModeToggle.addEventListener('click', toggleTheme);
             if (mobileDarkModeToggle) mobileDarkModeToggle.addEventListener('click', toggleTheme);
 
-
-            // Set initial theme based on saved preference or system setting
             const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             applyTheme(savedTheme);
 
-            // --- Language Dropdown ---
+            // --- Language Dropdown Logic ---
             const langButton = document.getElementById('language-menu-button');
             const langDropdown = document.getElementById('language-dropdown');
-
             if(langButton && langDropdown) {
                 langButton.addEventListener('click', (e) => {
                     e.stopPropagation();
                     langDropdown.classList.toggle('open');
                 });
-
                 document.addEventListener('click', (e) => {
                     if (!langDropdown.contains(e.target) && !langButton.contains(e.target)) {
                         langDropdown.classList.remove('open');
@@ -578,7 +760,7 @@
                 });
             }
             
-            // --- Mobile Menu ---
+            // --- Mobile Menu Logic ---
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             if(mobileMenuButton && mobileMenu) {
@@ -589,253 +771,15 @@
                 });
             }
 
-
-            // --- Carousel Logic ---
-            const carousel = document.getElementById('self-service-carousel');
-            if (carousel) {
-                const track = document.getElementById('carousel-track');
-                const dotsContainer = document.getElementById('carousel-dots');
-                const prevButton = document.getElementById('prev-btn');
-                const nextButton = document.getElementById('next-btn');
-                
-                if (track && dotsContainer && prevButton && nextButton) {
-                    let originalSlides = Array.from(track.querySelectorAll('.carousel-slide'));
-                    const slideCount = originalSlides.length;
-
-                    if (slideCount <= 1) {
-                        prevButton.style.display = 'none';
-                        nextButton.style.display = 'none';
-                        dotsContainer.style.display = 'none';
-                        return;
-                    }
-
-                    const firstClone = originalSlides[0].cloneNode(true);
-                    const lastClone = originalSlides[slideCount - 1].cloneNode(true);
-                    track.appendChild(firstClone);
-                    track.insertBefore(lastClone, originalSlides[0]);
-
-                    let allSlides = Array.from(track.children);
-                    
-                    let currentIndex = 0; 
-                    let currentTrackIndex = 1;
-                    let autoPlayInterval;
-                    
-                    // --- 滑动逻辑变量 START ---
-                    let isDragging = false;
-                    let isTransitioning = false;
-                    let startPos = { x: 0, y: 0 };
-                    let currentTranslate = 0;
-                    let prevTranslate = 0;
-                    let slideWidth = allSlides[0].offsetWidth;
-                    let animationFrameId;
-                    let isSwipeHorizontal = null; // null: 未决定, true: 水平, false: 垂直
-                    // --- 滑动逻辑变量 END ---
-                    
-                    function setInitialPosition() {
-                        slideWidth = allSlides[0].offsetWidth;
-                        track.style.transition = 'none';
-                        currentTranslate = -slideWidth * currentTrackIndex;
-                        track.style.transform = `translateX(${currentTranslate}px)`;
-                    }
-                    
-                    dotsContainer.innerHTML = '';
-                    for (let i = 0; i < slideCount; i++) {
-                        const dot = document.createElement('button');
-                        dot.classList.add('carousel-dot');
-                        dot.addEventListener('click', () => {
-                            if (isTransitioning) return;
-                            moveToSlide(i);
-                            resetAutoPlay();
-                        });
-                        dotsContainer.appendChild(dot);
-                    }
-                    const dots = Array.from(dotsContainer.children);
-                    
-                    function updateDots() {
-                        dots.forEach((dot, index) => dot.classList.toggle('active', index === currentIndex));
-                    }
-
-                    function setPosition() {
-                        track.style.transform = `translateX(${currentTranslate}px)`;
-                    }
-
-                    function moveToSlide(slideIndex) {
-                        if (isTransitioning) return;
-                        isTransitioning = true;
-                        currentTrackIndex = slideIndex + 1;
-                        track.style.transition = 'transform 0.4s ease-out';
-                        currentTranslate = -currentTrackIndex * slideWidth;
-                        setPosition();
-                    }
-                    
-                    function startAutoPlay() {
-                        clearInterval(autoPlayInterval);
-                        autoPlayInterval = setInterval(() => {
-                            if (isTransitioning || isDragging) return;
-                            isTransitioning = true;
-                            currentTrackIndex++;
-                            track.style.transition = 'transform 0.4s ease-out';
-                            currentTranslate = -currentTrackIndex * slideWidth;
-                            setPosition();
-                        }, 5000);
-                    }
-
-                    function resetAutoPlay() {
-                        startAutoPlay();
-                    }
-
-                    nextButton.addEventListener('click', () => {
-                        if (isTransitioning) return;
-                        isTransitioning = true;
-                        currentTrackIndex++;
-                        track.style.transition = 'transform 0.4s ease-out';
-                        currentTranslate = -currentTrackIndex * slideWidth;
-                        setPosition();
-                        resetAutoPlay();
-                    });
-
-                    prevButton.addEventListener('click', () => {
-                        if (isTransitioning) return;
-                        isTransitioning = true;
-                        currentTrackIndex--;
-                        track.style.transition = 'transform 0.4s ease-out';
-                        currentTranslate = -currentTrackIndex * slideWidth;
-                        setPosition();
-                        resetAutoPlay();
-                    });
-
-                    track.addEventListener('transitionend', () => {
-                        isTransitioning = false;
-                        if (currentTrackIndex <= 0) {
-                            track.style.transition = 'none';
-                            currentTrackIndex = slideCount;
-                            currentTranslate = -currentTrackIndex * slideWidth;
-                            setPosition();
-                        } else if (currentTrackIndex >= allSlides.length - 1) {
-                            track.style.transition = 'none';
-                            currentTrackIndex = 1;
-                            currentTranslate = -currentTrackIndex * slideWidth;
-                            setPosition();
-                        }
-                        currentIndex = currentTrackIndex - 1;
-                        updateDots();
-                    });
-
-                    // --- 优化后的滑动事件监听 START ---
-                    track.addEventListener('mousedown', dragStart);
-                    track.addEventListener('touchstart', dragStart, { passive: false }); // 关键: 允许 preventDefault
-
-                    track.addEventListener('mousemove', drag);
-                    track.addEventListener('touchmove', drag, { passive: false }); // 关键: 允许 preventDefault
-
-                    track.addEventListener('mouseup', dragEnd);
-                    track.addEventListener('mouseleave', dragEnd);
-                    track.addEventListener('touchend', dragEnd);
-                    // --- 优化后的滑动事件监听 END ---
-
-                    function dragStart(e) {
-                        if (isTransitioning) return;
-                        isDragging = true;
-                        isSwipeHorizontal = null; // 重置滑动方向
-                        startPos = { x: getPositionX(e), y: getPositionY(e) };
-                        clearInterval(autoPlayInterval);
-                        track.style.transition = 'none';
-                        track.style.cursor = 'grabbing';
-                        prevTranslate = currentTranslate;
-                        animationFrameId = requestAnimationFrame(animation);
-                    }
-
-                    function drag(e) {
-                        if (isDragging) {
-                            const currentPos = { x: getPositionX(e), y: getPositionY(e) };
-                            const deltaX = Math.abs(currentPos.x - startPos.x);
-                            const deltaY = Math.abs(currentPos.y - startPos.y);
-
-                            if (isSwipeHorizontal === null) {
-                                // 只有在移动超过一定阈值后才判断方向
-                                if (deltaX > 5 || deltaY > 5) {
-                                    isSwipeHorizontal = deltaX > deltaY;
-                                }
-                            }
-
-                            if (isSwipeHorizontal) {
-                                e.preventDefault(); // 如果是水平滑动，阻止页面垂直滚动
-                                currentTranslate = prevTranslate + currentPos.x - startPos.x;
-                            }
-                        }
-                    }
-
-                    function animation() {
-                        if (!isDragging) return;
-                        setPosition();
-                        requestAnimationFrame(animation);
-
-                    }
-
-                    function dragEnd(e) {
-                        cancelAnimationFrame(animationFrameId);
-                        const wasHorizontal = isSwipeHorizontal;
-                        isSwipeHorizontal = null;
-
-                        if (!isDragging) return;
-                        
-                        isDragging = false;
-                        track.style.cursor = 'grab';
-
-                        // 如果不是水平滑动，则不执行后续逻辑，并重启自动播放
-                        if (!wasHorizontal) {
-                            resetAutoPlay();
-                            return;
-                        }
-
-                        const movedBy = currentTranslate - prevTranslate;
-
-                        if (movedBy < -50 && currentTrackIndex < allSlides.length - 1) {
-                            currentTrackIndex++;
-                        } else if (movedBy > 50 && currentTrackIndex > 0) {
-                            currentTrackIndex--;
-                        }
-                        
-                        isTransitioning = true;
-                        track.style.transition = 'transform 0.4s ease-out';
-                        currentTranslate = -currentTrackIndex * slideWidth;
-                        setPosition();
-                        resetAutoPlay();
-                    }
-
-                    function getPositionX(e) {
-                        return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-                    }
-
-                    function getPositionY(e) {
-                        return e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
-                    }
-
-                    const handleResize = () => {
-                        setInitialPosition();
-                    };
-
-                    window.addEventListener('resize', handleResize);
-                    window.addEventListener('themeChanged', handleResize);
-
-                    setInitialPosition();
-                    updateDots();
-                    startAutoPlay();
-                }
-            }
-
             // --- Accordion Logic ---
             const accordionItems = document.querySelectorAll('.accordion-item');
             accordionItems.forEach(item => {
                 const button = item.querySelector('.accordion-button');
                 const content = item.querySelector('.accordion-content');
-                
                 if (!button || !content) return;
-
                 button.addEventListener('click', () => {
                     const isOpen = button.classList.contains('open');
-                    
-                    const parentGroup = button.closest('.space-y-2');
+                    const parentGroup = button.closest('.space-y-2, .space-y-4'); // Handles both footer and main content accordions
                     if (parentGroup) {
                         parentGroup.querySelectorAll('.accordion-item').forEach(otherItem => {
                             const otherButton = otherItem.querySelector('.accordion-button');
@@ -846,7 +790,6 @@
                             }
                         });
                     }
-
                     if (isOpen) {
                         button.classList.remove('open');
                         content.style.maxHeight = null;
@@ -945,6 +888,31 @@
                 if(popularMobileList) popularMobileList.innerHTML = msg;
             }
         });
+    </script>
+    
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <!-- Initialize Swiper -->
+    <script>
+      const swiper = new Swiper('#self-service-carousel', {
+        // Optional parameters
+        loop: true,
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+        },
+        // Pagination
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        // Navigation arrows
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      });
     </script>
 
 </body>
