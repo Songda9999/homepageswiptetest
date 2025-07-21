@@ -99,8 +99,8 @@
 
         /* Accordion Styles */
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
-        .accordion-button svg { transition: transform 0.3s ease; }
-        .accordion-button.open svg { transform: rotate(180deg); }
+        .accordion-button svg.chevron-icon { transition: transform 0.3s ease; }
+        .accordion-button.open svg.chevron-icon { transform: rotate(180deg); }
         .accordion-button.open .plus-icon { transform: rotate(45deg); }
         
         /* Dropdown Menu Animation */
@@ -133,6 +133,13 @@
             color: #374151; /* Corresponds to text-gray-700 */
         }
 
+        /* Mobile submenu transition */
+        .mobile-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
 
         /* --- Dark Mode Styles --- */
         body.dark { background-color: #000000; color: #e5e7eb; }
@@ -146,7 +153,7 @@
         }
 
         /* MODIFIED: Remove hover effect on mobile menu links in dark mode */
-        .dark #mobile-menu a:hover {
+        .dark #mobile-menu a:hover, .dark #mobile-menu button:hover {
             color: #e5e7eb;
         }
 
@@ -196,6 +203,12 @@
             display: none;
         }
         
+        .refresh-button {
+            transition: transform 0.3s ease;
+        }
+        .refresh-button:hover {
+            transform: rotate(90deg);
+        }
     </style>
 </head>
 <body class="font-sans">
@@ -236,7 +249,7 @@
                             </div>
                             <a href="https://www.100ex.com/zh_CN/finance" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">金融理财</a>
                             <a href="https://www.100ex.com/zh_CN/BYB" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">BYB 专区</a>
-                            <a href="#" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">抵押借贷</a>
+                            <a href="https://www.100ex.com/zh_CN/toLoan" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">抵押借贷</a>
                         </div>
                     </div>
                 </div>
@@ -270,20 +283,23 @@
         </div>
 
         <div class="md:hidden hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">市场行情</a>
-                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">现货交易</a>
-                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">币币交易</a>
-                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">杠杆交易</a>
-                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">网格交易</a>
-                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">合约交易</a>
-                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">C2C交易</a>
-                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">普通交易</a>
-                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">发布广告</a>
-                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">申请商户</a>
-                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">金融理财</a>
-                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">BYB 专区</a>
-                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">抵押借贷</a>
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">                
+                <!-- 现货交易 (Spot Trading) Accordion -->
+                <div>
+                    <button class="mobile-accordion-trigger w-full flex justify-between items-center text-gray-700 px-3 py-2 rounded-md text-base font-semibold">
+                        <span>现货交易</span>
+                        <svg class="chevron-icon w-5 h-5 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div class="mobile-submenu pl-5 pr-3">
+                        <a href="https://www.100ex.com/zh_CN/trade?tradeType=1" class="text-gray-700 block py-2 rounded-md text-base font-medium">币币交易</a>
+                        <a href="https://www.100ex.com/zh_CN/margin/BTC_USDT" class="text-gray-700 block py-2 rounded-md text-base font-medium">杠杆交易</a>
+                    </div>
+                </div>
+
+                <a href="https://mfutures.100ex.com/zh_CN/" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">合约交易</a>                
+                <a href="https://www.100ex.com/zh_CN/finance" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">金融理财</a>
+                <a href="https://www.100ex.com/zh_CN/BYB" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">BYB 专区</a>
+                <a href="https://www.100ex.com/zh_CN/toLoan" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">抵押借贷</a>
                  <div class="border-t border-gray-200 my-4"></div>
                  <div class="px-3 py-2 flex items-center justify-between">
                      <span class="font-medium text-gray-700">切换语言</span>
@@ -308,12 +324,12 @@
     <!-- Header -->
     <header class="welcome-header relative text-center py-12 sm:py-20">
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-2xl font-bold text-gray-600">欢迎访问</h2>
-            <div class="flex items-center justify-center mt-4 mb-8">
-                <h1 class="text-4xl sm:text-5xl font-bold mr-3">佰易帮助中心</h1>
-                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full brand-bg flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
-                </div>
+            <h2 class="text-2xl font-bold text-gray-600 mb-4">欢迎访问</h2>
+            <div class="relative inline-block mt-4 mb-8">
+                <h1 class="text-4xl sm:text-5xl font-bold">佰易帮助中心</h1>
+                <svg class="absolute top-0 left-full w-12 h-12 sm:w-16 sm:h-16 object-contain transform -translate-y-1/4 ml-1" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="#00cfb6">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M29.9979 4.99902C16.1911 4.99902 4.99756 16.1925 4.99756 29.9994C4.99756 35.6653 6.88327 40.8909 10.0605 45.0841L6.77905 54.0101L16.8466 51.2643C20.6667 53.6322 25.1726 54.9997 29.9979 54.9997C43.8047 54.9997 54.9982 43.8072 54.9982 29.9994C54.9982 16.1916 43.8047 4.99902 29.9979 4.99902ZM42.0026 29.0002V35.6669H39.9819C38.2611 38.2376 35.5733 40.1064 32.4389 40.7528C32.0231 41.6843 31.0887 42.3336 30.0026 42.3336C28.5298 42.3336 27.3359 41.1397 27.3359 39.6669C27.3359 38.1942 28.5298 37.0002 30.0026 37.0002C30.8833 37.0002 31.6643 37.4272 32.1499 38.0854C33.833 37.6891 35.3404 36.8372 36.5346 35.6669H35.3359V27.6669H38.5673C37.926 23.5135 34.3357 20.3336 30.0026 20.3336C25.6696 20.3336 22.0792 23.5135 21.4379 27.6669H24.6693V35.6669H18.0026V29.0002C18.0026 22.3728 23.3752 17.0002 30.0026 17.0002C36.1793 17.0002 41.2661 21.667 41.9294 27.6669C41.9333 27.7023 41.937 27.7378 41.9406 27.7733C41.9816 28.1767 42.0026 28.586 42.0026 29.0002Z"/>
+                </svg>
             </div>
             <div class="max-w-2xl mx-auto">
                 <div class="relative">
@@ -581,14 +597,24 @@
                     <a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-lg border border-gray-200">
-                        <h3 class="font-bold text-lg mb-4 flex items-center"><img src="https://i.ibb.co/sdFGh0cF/flame.png" alt="热门问题图标" class="w-6 h-6 mr-2">热门问题</h3>
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 relative">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-lg flex items-center"><img src="https://i.ibb.co/sdFGh0cF/flame.png" alt="热门问题图标" class="w-6 h-6 mr-2">热门问题</h3>
+                            <button id="refresh-popular" class="refresh-button text-gray-400 hover:text-brand-dark dark:hover:text-brand">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                            </button>
+                        </div>
                         <ul id="zendesk-popular-list-desktop" class="space-y-4">
                             <li>正在加载最新文章...</li>
                         </ul>
                     </div>
-                    <div class="bg-white p-6 rounded-lg border border-gray-200">
-                        <h3 class="font-bold text-lg mb-4 flex items-center"><img src="https://i.ibb.co/k6VtcZYb/lightbulb-on.png" alt="最新发布文章图标" class="w-6 h-6 mr-2">最新发布文章</h3>
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 relative">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-lg flex items-center"><img src="https://i.ibb.co/k6VtcZYb/lightbulb-on.png" alt="最新发布文章图标" class="w-6 h-6 mr-2">最新发布文章</h3>
+                            <button id="refresh-latest" class="refresh-button text-gray-400 hover:text-brand-dark dark:hover:text-brand">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                            </button>
+                        </div>
                         <ul id="zendesk-latest-list-desktop" class="space-y-4">
                             <li>正在加载最新文章...</li>
                         </ul>
@@ -628,7 +654,7 @@
                             <p class="text-gray-500 mt-2">如有任何问题，请随时联系我们。聊天支持团队全天候为您提供服务。</p>
                             <a href="#" class="text-sm font-medium brand-text brand-hover mt-4 inline-block">查看更多</a>
                         </div>
-                        <img src="https://i.ibb.co/M51V9Xv2/customer-care.png" alt="聊天支持图标" class="w-20 h-20 mt-4 sm:mt-0 sm:ml-6 object-contain" p-2 bg-white" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e6f9f7/00cfb6?text=Chat';">
+                        <img src="https://i.ibb.co/M51V9Xv2/customer-care.png" alt="聊天支持图标" class="w-20 h-20 mt-4 sm:mt-0 sm:ml-6 object-contain" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e6f9f7/00cfb6?text=Chat';">
                     </div>
                      <div class="bg-white p-8 rounded-lg border border-gray-200 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left">
                         <div>
@@ -765,7 +791,8 @@
             if (navDarkModeToggle) navDarkModeToggle.addEventListener('click', toggleTheme);
             if (mobileDarkModeToggle) mobileDarkModeToggle.addEventListener('click', toggleTheme);
 
-            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            // MODIFIED: Set default theme to light mode
+            const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
 
             // --- Language Dropdown Logic ---
@@ -793,8 +820,28 @@
                     mobileMenuButton.querySelector('svg:last-child').classList.toggle('hidden');
                 });
             }
+            
+            // --- Mobile Menu Accordion Logic ---
+            const mobileAccordionTriggers = document.querySelectorAll('.mobile-accordion-trigger');
+            mobileAccordionTriggers.forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const submenu = trigger.nextElementSibling;
+                    const icon = trigger.querySelector('.chevron-icon');
 
-            // --- Accordion Logic ---
+                    if (submenu.style.maxHeight) {
+                        // Close the submenu
+                        submenu.style.maxHeight = null;
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        // Open the submenu
+                        submenu.style.maxHeight = submenu.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+
+            // --- Accordion Logic (for FAQ and Footer) ---
             const accordionItems = document.querySelectorAll('.accordion-item');
             accordionItems.forEach(item => {
                 const button = item.querySelector('.accordion-button');
@@ -828,13 +875,19 @@
         document.addEventListener('DOMContentLoaded', function () {
             const zendeskSubdomain = '100ex'; 
             const proxyUrl = 'https://corsproxy.io/?';
-            const popularSectionIds = ['46041105078553'];
+            const popularSectionIds = ['46041105078553', '45999231749529', '46011276167193']; // Add more section IDs here
+            let currentPopularSectionIndex = 0;
 
-            const fetchAndRenderArticles = (endpoint, desktopListEl, mobileListEl, renderFunc) => {
+            const fetchAndRenderArticles = (endpoint, desktopListEl, mobileListEl, renderFunc, clear = true) => {
                 if (!desktopListEl || !mobileListEl) {
                     if(desktopListEl) desktopListEl.innerHTML = '<li>代码错误：列表元素未找到。</li>';
                     if(mobileListEl) mobileListEl.innerHTML = '<li>代码错误：列表元素未找到。</li>';
                     return;
+                }
+                
+                if(clear) {
+                    desktopListEl.innerHTML = '<li>正在加载...</li>';
+                    mobileListEl.innerHTML = '<li>正在加载...</li>';
                 }
 
                 const zendeskApiUrl = `https://${zendeskSubdomain}.zendesk.com/api/v2/help_center/zh-cn/${endpoint}`;
@@ -846,8 +899,10 @@
                         return response.json();
                     })
                     .then(data => {
-                        desktopListEl.innerHTML = '';
-                        mobileListEl.innerHTML = '';
+                        if(clear){
+                            desktopListEl.innerHTML = '';
+                            mobileListEl.innerHTML = '';
+                        }
                         
                         const articles = data.articles;
 
@@ -857,8 +912,10 @@
                             });
                         } else {
                             const noArticlesMsg = '<li>暂无文章。</li>';
-                            desktopListEl.innerHTML = noArticlesMsg;
-                            mobileListEl.innerHTML = noArticlesMsg;
+                             if(clear){
+                                desktopListEl.innerHTML = noArticlesMsg;
+                                mobileListEl.innerHTML = noArticlesMsg;
+                            }
                         }
                     })
                     .catch(error => {
@@ -896,20 +953,32 @@
             const latestDesktopList = document.getElementById('zendesk-latest-list-desktop');
             const latestMobileContainer = document.getElementById('zendesk-latest-list-mobile-container');
             const latestMobileList = latestMobileContainer ? latestMobileContainer.querySelector('ul') : null;
-            fetchAndRenderArticles('articles.json?sort_by=created_at&sort_order=desc&per_page=3', latestDesktopList, latestMobileList, renderLatestArticle);
-
+            
             const popularDesktopList = document.getElementById('zendesk-popular-list-desktop');
             const popularMobileList = document.getElementById('zendesk-popular-list-mobile');
-            
-            if (popularSectionIds && popularSectionIds.length > 0) {
-                const randomSectionId = popularSectionIds[Math.floor(Math.random() * popularSectionIds.length)];
-                const popularArticlesEndpoint = `sections/${randomSectionId}/articles.json?per_page=5`;
-                fetchAndRenderArticles(popularArticlesEndpoint, popularDesktopList, popularMobileList, renderPopularArticle);
-            } else {
-                const msg = '<li>请在代码中设置一个或多个Section ID。</li>';
-                if(popularDesktopList) popularDesktopList.innerHTML = msg;
-                if(popularMobileList) popularMobileList.innerHTML = msg;
+
+            function loadLatestArticles() {
+                 fetchAndRenderArticles('articles.json?sort_by=created_at&sort_order=desc&per_page=3', latestDesktopList, latestMobileList, renderLatestArticle);
             }
+
+            function loadPopularArticles() {
+                if (popularSectionIds && popularSectionIds.length > 0) {
+                    const sectionId = popularSectionIds[currentPopularSectionIndex];
+                    const popularArticlesEndpoint = `sections/${sectionId}/articles.json?per_page=5`;
+                    fetchAndRenderArticles(popularArticlesEndpoint, popularDesktopList, popularMobileList, renderPopularArticle);
+                    currentPopularSectionIndex = (currentPopularSectionIndex + 1) % popularSectionIds.length;
+                } else {
+                    const msg = '<li>请在代码中设置一个或多个Section ID。</li>';
+                    if(popularDesktopList) popularDesktopList.innerHTML = msg;
+                    if(popularMobileList) popularMobileList.innerHTML = msg;
+                }
+            }
+            
+            loadLatestArticles();
+            loadPopularArticles();
+
+            document.getElementById('refresh-latest').addEventListener('click', loadLatestArticles);
+            document.getElementById('refresh-popular').addEventListener('click', loadPopularArticles);
         });
     </script>
     
