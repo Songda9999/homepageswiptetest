@@ -128,6 +128,11 @@
         .light-logo { display: block; }
         .dark-logo { display: none; }
 
+        /* MODIFIED: Remove hover effect on mobile menu links */
+        #mobile-menu a:hover {
+            color: #374151; /* Corresponds to text-gray-700 */
+        }
+
 
         /* --- Dark Mode Styles --- */
         body.dark { background-color: #000000; color: #e5e7eb; }
@@ -138,6 +143,11 @@
         
         .top-nav a:hover, .top-nav button:hover {
             color: #00cfb6;
+        }
+
+        /* MODIFIED: Remove hover effect on mobile menu links in dark mode */
+        .dark #mobile-menu a:hover {
+            color: #e5e7eb;
         }
 
         .dark .top-nav .dropdown-menu { background-color: #2d3748; border-color: #4b5563; }
@@ -328,7 +338,6 @@
                     <a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a>
                 </div>
                 
-                <!-- MODIFIED: Added pt-2 to give space for card hover effect -->
                 <div class="swiper pt-2" id="self-service-carousel">
                     <div class="swiper-wrapper">
                         <!-- Slide 1: First 8 Cards -->
@@ -337,8 +346,8 @@
                                 <!-- Card 1 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                      <div class="brand-icon-bg p-2 rounded-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="brand-text"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-4 5 5m0 0 5-5m-5 5V3"/></svg>
+                                      <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                        <img src="https://i.ibb.co/PsDCRWvG/download.png" alt="注册与下载指南图标" class="w-6 h-6">
                                       </div>
                                       <div>
                                         <h3 class="font-semibold text-sm sm:text-base">注册与下载指南</h3>
@@ -349,8 +358,8 @@
                                 <!-- Card 2 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                      <div class="brand-icon-bg p-2 rounded-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="brand-text"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4.8-10V5l8-3.8 7c0 6.8 0 10 8 10.8V17c0 2.2-8 5-8 5z"/></svg>
+                                      <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                        <img src="https://i.ibb.co/0yrXCNVb/shield-check.png" alt="账号安全设置图标" class="w-6 h-6">
                                       </div>
                                       <div>
                                         <h3 class="font-semibold text-sm sm:text-base">账户安全设置</h3>
@@ -361,8 +370,8 @@
                                 <!-- Card 3 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                      <div class="brand-icon-bg p-2 rounded-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="brand-text"><path stroke-linecap="round" stroke-linejoin="round" d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                      <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                         <img src="https://i.ibb.co/ksPHxY7d/user-trust.png" alt="身份认证图标" class="w-6 h-6">
                                       </div>
                                       <div>
                                         <h3 class="font-semibold text-sm sm:text-base">身份认证</h3>
@@ -373,8 +382,8 @@
                                 <!-- Card 4 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                      <div class="brand-icon-bg p-2 rounded-md">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="brand-text"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8m10 12a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>
+                                      <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                        <img src="https://i.ibb.co/Kp0QJBkY/otp.png" alt="充值与提现图标" class="w-6 h-6">
                                       </div>
                                       <div>
                                         <h3 class="font-semibold text-sm sm:text-base">充值与提现</h3>
@@ -385,8 +394,8 @@
                                 <!-- Card 5 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                            <img src="https://i.ibb.co/ksjNmDgd/priority-arrows.png" alt="验证码与验证器问题图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">验证码与验证器问题</h3>
@@ -397,8 +406,8 @@
                                 <!-- Card 6 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                            <img src="https://i.ibb.co/wN8Xfhxq/coins-crypto.png" alt="交易操作指南图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">交易操作指南</h3>
@@ -409,8 +418,8 @@
                                 <!-- Card 7 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                           <img src="https://i.ibb.co/F45rFbjD/document-signed.png" alt="合约交易解答图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">合约交易问答</h3>
@@ -421,8 +430,8 @@
                                 <!-- Card 8 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><polyline points="20 12 20 22 4 22 4 12"/><rect width="20" height="5" x="2" y="7"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                            <img src="https://i.ibb.co/9mwzT1N8/gift.png" alt="活动与奖励公告图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">活动与奖励公告</h3>
@@ -438,8 +447,8 @@
                                 <!-- Card 9 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                            <img src="https://i.ibb.co/HffS1zwB/users.png" alt="C2C 交易图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">C2C 交易</h3>
@@ -450,8 +459,8 @@
                                 <!-- Card 10 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M9 15H8A5 5 0 0 1 3 10V9A5 5 0 0 1 8 4h2"/><path d="M15 9h1a5 5 0 0 1 5 5v1a5 5 0 0 1-5 5h-2"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                            <img src="https://i.ibb.co/mrG9SvVW/send-money.png" alt="批量转账图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">批量转账</h3>
@@ -462,8 +471,8 @@
                                 <!-- Card 11 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M10 10v0c-1.16-.02-2.2.85-2.2 2 0 1.15.98 2.01 2.2 2 1.22-.01 2.2-.86 2.2-2 0-1.15-1.03-2.02-2.2-2Z"/><path d="M15.65 8.65A5.5 5.5 0 0 0 12 6c-3.04 0-5.5 2.46-5.5 5.5 0 2.22 1.32 4.13 3.2 5.01"/><path d="M18 6c-1.18 0-2.25.54-2.29 1.35"/><path d="M22 12c0 4.42-3.58 8-8 8a8 8 0 0 1-8-8c0-4.42 3.58-8 8-8 1.18 0 2.29.26 3.32.72"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                            <img src="https://i.ibb.co/CpyvbN7b/piggy-bank.png" alt="金融理财图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">金融理财</h3>
@@ -474,8 +483,8 @@
                                 <!-- Card 12 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="m12 14 4-4"/><path d="M12 14 8 10"/><path d="M12 14V2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5Z"/><path d="M12 14v8"/><path d="M7 22h10"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                            <img src="https://i.ibb.co/WpstdXYD/discount.png" alt="抵押借贷图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">抵押借贷</h3>
@@ -486,8 +495,8 @@
                                 <!-- Card 13 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                            <img src="https://i.ibb.co/4nVnVk6D/link-alt.png" alt="推广返佣计划图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">推广返佣计划</h3>
@@ -498,8 +507,8 @@
                                 <!-- Card 14 -->
                                 <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block">
                                     <div class="flex items-start space-x-3 sm:space-x-4">
-                                        <div class="brand-icon-bg p-2 rounded-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+                                        <div class="brand-icon-bg p-2 rounded-md flex-shrink-0">
+                                            <img src="https://i.ibb.co/352M9kQm/percentage.png" alt="手续费与费率说明图标" class="w-6 h-6">
                                         </div>
                                         <div>
                                             <h3 class="font-semibold text-sm sm:text-base">手续费与费率说明</h3>
@@ -543,7 +552,7 @@
                 </div>
                 <div class="accordion-item bg-white rounded-lg border border-gray-200">
                     <button class="accordion-button w-full flex justify-between items-center p-4 text-left font-semibold">
-                        <span>热门问题</span>
+                        <span class="flex items-center"><img src="https://i.ibb.co/sdFGh0cF/flame.png" alt="热门问题图标" class="w-6 h-6 mr-2">热门问题</span>
                         <svg class="chevron-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="accordion-content">
@@ -554,7 +563,7 @@
                 </div>
                 <div class="accordion-item bg-white rounded-lg border border-gray-200">
                     <button class="accordion-button w-full flex justify-between items-center p-4 text-left font-semibold">
-                        <span>最新发布文章</span>
+                        <span class="flex items-center"><img src="https://i.ibb.co/k6VtcZYb/lightbulb-on.png" alt="最新发布文章图标" class="w-6 h-6 mr-2">最新发布文章</span>
                         <svg class="chevron-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="accordion-content">
@@ -573,13 +582,13 @@
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded-lg border border-gray-200">
-                        <h3 class="font-bold text-lg mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text mr-2"><path d="M14 9.5a2.5 2.5 0 0 0-5 0v3.5a2.5 2.5 0 0 0 5 0V10l2-2.5a2.5 2.5 0 0 0-5 0V10l-4.5 4.5a2.5 2.5 0 0 0 5 0v-3a2.5 2.5 0 0 0-5 0V11l2-2.5a2.5 2.5 0 0 0-5 0V11"></path></svg>热门问题</h3>
+                        <h3 class="font-bold text-lg mb-4 flex items-center"><img src="https://i.ibb.co/sdFGh0cF/flame.png" alt="热门问题图标" class="w-6 h-6 mr-2">热门问题</h3>
                         <ul id="zendesk-popular-list-desktop" class="space-y-4">
                             <li>正在加载最新文章...</li>
                         </ul>
                     </div>
                     <div class="bg-white p-6 rounded-lg border border-gray-200">
-                        <h3 class="font-bold text-lg mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text mr-2"><path d="M5 3v2"></path><path d="M19 3v2"></path><path d="M21 8.5V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8.5"></path><path d="M3 8.5h18"></path><path d="M9 14l2 2 4-4"></path></svg>最新发布文章</h3>
+                        <h3 class="font-bold text-lg mb-4 flex items-center"><img src="https://i.ibb.co/k6VtcZYb/lightbulb-on.png" alt="最新发布文章图标" class="w-6 h-6 mr-2">最新发布文章</h3>
                         <ul id="zendesk-latest-list-desktop" class="space-y-4">
                             <li>正在加载最新文章...</li>
                         </ul>
@@ -593,6 +602,20 @@
                 <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">实名认证</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">如何完成个人认证</a></li><li><a href="#">企业认证全流程</a></li></ul></div>
                 <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">佰易 C2C 介绍</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">C2C交易介绍</a></li><li><a href="#">提领限额说明</a></li></ul></div>
                 <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">安全指南</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">2FA 安全提示</a></li><li><a href="#">如何防范网络钓鱼</a></li></ul></div>
+            </section>
+
+            <!-- 公告中心 -->
+            <section>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">公告中心</h2>
+                    <a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                    <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center"><div class="brand-icon-bg p-3 rounded-full mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><h3 class="font-semibold text-sm sm:text-base">数字货币及交易对上新</h3></a>
+                    <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center"><div class="brand-icon-bg p-3 rounded-full mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div><h3 class="font-semibold text-sm sm:text-base">佰易最新动态</h3></a>
+                    <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center"><div class="brand-icon-bg p-3 rounded-full mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M20 12v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"></path><path d="M19 5l-2 2-2-2"></path><path d="M19 5l2 2-2 2"></path><rect x="9" y="10" width="6" height="8" rx="1"></rect></svg></div><h3 class="font-semibold text-sm sm:text-base">佰易最新活动</h3></a>
+                    <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center"><div class="brand-icon-bg p-3 rounded-full mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div><h3 class="font-semibold text-sm sm:text-base">法币及交易对上新</h3></a>
+                </div>
             </section>
 
             <!-- More Help Section -->
@@ -912,6 +935,15 @@
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
         },
+      });
+
+      // MODIFIED: Add event listeners to pause on hover
+      const swiperWrapper = document.querySelector('#self-service-carousel');
+      swiperWrapper.addEventListener('mouseenter', () => {
+        swiper.autoplay.stop();
+      });
+      swiperWrapper.addEventListener('mouseleave', () => {
+        swiper.autoplay.start();
       });
     </script>
 
