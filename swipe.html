@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佰易帮助中心</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 自定义 Tailwind 配置 */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand': '#00cfb6',
+                        'brand-light': '#e6f9f7',
+                        'brand-dark': '#00a692',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans SC', 'sans-serif'],
+                    },
+                }
+            }
+        }
+
+        /* 全局样式 */
+        body {
+            background-color: #f8f9fa;
+            color: #1e2329;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a:not(.brand-text):not(.info-card):hover {
+            color: #00cfb6;
+        }
+        
+        input[type="search"]:focus {
+            border-color: #00cfb6;
+            box-shadow: 0 0 0 2px rgba(0, 207, 182, 0.2);
+            outline: none;
+        }
+
+        /* 品牌色相关的样式 */
+        .brand-text { color: #00cfb6; }
+        .brand-bg { background-color: #00cfb6; }
+        .brand-border { border-color: #00cfb6; }
+        .brand-hover:hover { color: #00a692; }
+        .brand-icon-bg { background-color: #e6f9f7; }
+
+        /* 卡片样式 */
+        .info-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
+            position: relative;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-4px);
+            z-index: 10;
+        }
+        
+        /* 轮播导航点样式 */
+        .carousel-dot { width: 12px; height: 4px; border-radius: 2px; background-color: #e5e7eb; transition: background-color 0.3s ease; }
+        .carousel-dot.active { background-color: #374151; }
+        .carousel-arrow { color: #6b7280; transition: color 0.3s ease; }
+        .carousel-arrow:hover { color: #111827; }
+
+        /* 手风琴样式 */
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .accordion-button svg { transition: transform 0.3s ease; }
+        .accordion-button.open svg { transform: rotate(180deg); }
+        .accordion-button.open .plus-icon { transform: rotate(45deg); }
+        
+        /* --- 轮播图滑动优化 START --- */
+        #carousel-track { 
+            cursor: grab; 
+            /* 关键优化1: 告知浏览器此区域的水平滑动由JS处理，但允许原生垂直滚动。这是解决移动端滑动冲突的现代最佳实践。 */
+            touch-action: pan-y;
+            /* 关键优化2: 告知浏览器 transform 属性会频繁变化，以便进行硬件加速优化。 */
+            will-change: transform;
+        }
+        /* --- 轮播图滑动优化 END --- */
+
+
+        /* 导航栏下拉菜单动画 */
+        .dropdown-menu {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .group:hover .dropdown-menu, .dropdown-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .dropdown-arrow {
+            transition: transform 0.2s ease-out;
+        }
+        .group:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Logo 切换 */
+        .light-logo { display: block; }
+        .dark-logo { display: none; }
+
+
+        /* --- 黑夜模式样式 --- */
+        body.dark { background-color: #000000; color: #e5e7eb; }
+        .dark .top-nav { background-color: #1e2329; border-bottom-color: #4b5563;}
+        .dark .light-logo { display: none; }
+        .dark .dark-logo { display: block; }
+        .dark .top-nav a, .dark .top-nav button { color: #e5e7eb; }
+        
+        /* --- 修改 START: 统一导航栏悬停颜色 --- */
+        .top-nav a:hover, .top-nav button:hover {
+            color: #00cfb6;
+        }
+        /* --- 修改 END --- */
+
+        .dark .top-nav .dropdown-menu { background-color: #2d3748; border-color: #4b5563; }
+        .dark .top-nav .dropdown-menu a { color: #e5e7eb; }
+        .dark .top-nav .dropdown-menu a:hover { background-color: #4a5568; }
+        .dark #mobile-menu { background-color: #1e2329; }
+        .dark #mobile-menu a, .dark #mobile-menu span, .dark #mobile-menu button { color: #e5e7eb; }
+        .dark #mobile-menu-button { background-color: #1e2329; }
+        .dark header.welcome-header { background-color: #0f0f10; }
+        .dark .main-container-bg { background-color: #000000; }
+        .dark .bg-white { background-color: transparent; }
+        .dark .border-gray-200 { border-color: #4b5563; }
+        .dark h1, .dark h2, .dark h3, .dark h4 { color: #ffffff; }
+        .dark .text-gray-600, .dark .text-gray-500, .dark .text-sm.text-gray-400 { color: #d1d5db; }
+        .dark p, .dark li, .dark a, .dark span, .dark div:not(.top-nav *) { color: #d1d5db; }
+        .dark a.brand-text, .dark a.brand-hover:hover { color: #00cfb6; }
+        .dark input[type="search"] { background-color: #ffffff; border-color: #4b5563; color: #1e2329; }
+        .dark input[type="search"]:focus { border-color: #00cfb6;  box-shadow: 0 0 0 3px rgba(0, 207, 182, 0.3);}
+        .dark input[type="search"]::placeholder { color: #9ca3af; }
+        .dark .brand-icon-bg { background-color: #374151; }
+        .dark .brand-text { color: #00cfb6; }
+        .dark .carousel-arrow { color: #9ca3af; }
+        .dark .carousel-arrow:hover { color: #f9fafb; }
+        .dark .carousel-dot { background-color: #4b5563; }
+        .dark .carousel-dot.active { background-color: #d1d5db; }
+        .dark footer .community-icons a { color: #ffffff; }
+        .dark footer .community-icons a:hover { color: #00cfb6; }
+        .dark footer .accordion-button, .dark footer .text-gray-500 { color: #d1d5db; }
+        .dark .info-card:hover {
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.08);
+        }
+
+        .info-card p {
+            display: block !important;
+        }
+        
+        /* 新版黑夜模式开关样式 */
+        .dark-mode-thumb {
+            background-color: #ffffff;
+            transition: transform 0.2s ease-in-out;
+        }
+        .dark .dark-mode-switch-icon.sun {
+            display: none;
+        }
+        .dark .dark-mode-switch-icon.moon {
+            display: block;
+        }
+        .dark-mode-switch-icon.moon {
+            display: none;
+        }
+        
+    </style>
+</head>
+<body class="font-sans">
+    <!-- The rest of your HTML body remains unchanged -->
+    <nav class="top-nav bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img class="h-8 w-auto light-logo" src="https://i.ibb.co/vCv92HS7/byexlogo-png.png" alt="BYEX Logo">
+                        <img class="h-8 w-auto dark-logo" src="https://i.ibb.co/gb3b4F7C/byexlogowhite.png" alt="BYEX Logo Dark">
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <!-- 修改: 移除了 hover:text-brand-dark 类 -->
+                            <a href="https://www.100ex.com/zh_CN/market" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">市场行情</a>
+                            
+                            <!-- 现货交易 Dropdown -->
+                            <div class="relative group">
+                                <button class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold flex items-center">
+                                    <span>现货交易</span>
+                                    <svg class="dropdown-arrow w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div class="dropdown-menu absolute z-10 bg-white rounded-md shadow-lg py-1 w-40 border border-gray-200">
+                                    <a href="https://www.100ex.com/zh_CN/trade?tradeType=1" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">币币交易</a>
+                                    <a href="https://www.100ex.com/zh_CN/margin/BTC_USDT" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">杠杆交易</a>
+                                    <a href="https://www.100ex.com/zh_CN/trade?tradeType=3" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">网格交易</a>
+                                </div>
+                            </div>
+
+                            <a href="https://futures.100ex.com/zh_CN" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">合约交易</a>
+                            
+                            <!-- C2C交易 Dropdown -->
+                            <div class="relative group">
+                                <button class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold flex items-center">
+                                    <span>C2C交易</span>
+                                    <svg class="dropdown-arrow w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div class="dropdown-menu absolute z-10 bg-white rounded-md shadow-lg py-1 w-40 border border-gray-200">
+                                    <a href="https://otc.100ex.com/zh_CN/C2C" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">普通交易</a>
+                                    <a href="https://otc.100ex.com/zh_CN/C2C/merchant/publishAd" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">发布广告</a>
+                                    <a href="https://otc.100ex.com/zh_CN/C2C/applyMerchant" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">申请商户</a>
+                                </div>
+                            </div>
+
+                            <a href="https://www.100ex.com/zh_CN/finance" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">金融理财</a>
+                            <a href="https://www.100ex.com/zh_CN/BYB" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">BYB 专区</a>
+                            <a href="#" class="text-gray-700 px-3 py-2 rounded-md text-sm font-semibold">抵押借贷</a>
+                        </div>
+                    </div>
+                </div>
+                 <div class="hidden md:flex items-center space-x-4">
+                    <div class="relative">
+                        <button id="language-menu-button" class="flex items-center text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </button>
+                        <div id="language-dropdown" class="dropdown-menu absolute right-0 mt-2 z-10 bg-white rounded-md shadow-lg py-1 w-40 border border-gray-200">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">简体中文</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">English</a>
+                        </div>
+                    </div>
+                     <button id="nav-dark-mode-toggle" class="text-gray-700">
+                        <svg class="dark-mode-switch-icon sun h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        <svg class="dark-mode-switch-icon moon h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </button>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-dark" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">市场行情</a>
+                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">现货交易</a>
+                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">币币交易</a>
+                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">杠杆交易</a>
+                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">网格交易</a>
+                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">合约交易</a>
+                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">C2C交易</a>
+                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">普通交易</a>
+                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">发布广告</a>
+                <a href="#" class="text-gray-700 block pl-8 pr-3 py-2 rounded-md text-base font-medium">申请商户</a>
+                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">金融理财</a>
+                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">BYB 专区</a>
+                <a href="#" class="text-gray-700 block px-3 py-2 rounded-md text-base font-semibold">抵押借贷</a>
+                 <div class="border-t border-gray-200 my-4"></div>
+                 <div class="px-3 py-2 flex items-center justify-between">
+                     <span class="font-medium text-gray-700">切换语言</span>
+                     <div class="relative">
+                        <button id="mobile-language-button" class="flex items-center text-gray-700">
+                            <span>简体中文</span>
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                     </div>
+                 </div>
+                 <div class="px-3 py-2 flex items-center justify-between">
+                     <span class="font-medium text-gray-700">黑夜模式</span>
+                     <button id="mobile-dark-mode-toggle" class="text-gray-700">
+                        <svg class="dark-mode-switch-icon sun h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        <svg class="dark-mode-switch-icon moon h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </button>
+                 </div>
+            </div>
+        </div>
+    </nav>
+    <header class="welcome-header relative text-center py-12 sm:py-20">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold text-gray-600">欢迎访问</h2>
+            <div class="flex items-center justify-center mt-4 mb-8">
+                <h1 class="text-4xl sm:text-5xl font-bold mr-3">佰易帮助中心</h1>
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full brand-bg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                </div>
+            </div>
+            <div class="max-w-2xl mx-auto">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <input type="search" placeholder="搜索或提问" class="w-full p-4 pl-12 bg-white border-2 border-gray-200 rounded-lg transition-colors duration-200">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container-bg bg-white">
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 py-12 sm:py-16">
+
+            <section>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">自助服务</h2>
+                    <a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a>
+                </div>
+                
+                <div id="self-service-carousel" class="relative">
+                    <div class="overflow-hidden pt-2 -mt-2">
+                        <div id="carousel-track" class="flex">
+                            <div class="carousel-slide w-full flex-shrink-0 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">注册与下载指南</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">iOS/安卓下载教程及注册流程，含海外 ID 切换说明</p></div></div></a>
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div><div><h3 class="font-semibold text-sm sm:text-base">账号与安全设置</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">设置资金密码、谷歌验证、面容识别、手势密码等</p></div></div></a>
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg></div><div><h3 class="font-semibold text-sm sm:text-base">身份认证（KYC）</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">完成个人实名认证，提升账户安全等级</p></div></div></a>
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">验证码与验证器问题</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">验证码收不到、谷歌验证器重置等处理方式</p></div></div></a>
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">充值与提现</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">充值不到账、提币失败、内部转账等</p></div></div></a>
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">交易操作指南</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">现货、合约等交易流程，含资金划转</p></div></div></a>
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">合约交易问答</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">张数、保证金、资金费率、回报率等核心概念解读</p></div></div></a>
+                                <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><polyline points="20 12 20 22 4 22 4 12"/><rect width="20" height="5" x="2" y="7"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">活动与奖励公告</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">最新活动说明、参与条件、奖励发放公示</p></div></div></a>
+                            </div>
+                            <div class="carousel-slide w-full flex-shrink-0 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">C2C 交易</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">C2C 买卖流程、订单风控与申诉处理</p></div></div></a>
+                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M9 15H8A5 5 0 0 1 3 10V9A5 5 0 0 1 8 4h2"/><path d="M15 9h1a5 5 0 0 1 5 5v1a5 5 0 0 1-5 5h-2"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">批量转账</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">支持按 UID 批量发起内部转账，适用于多账户资金划转</p></div></div></a>
+                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M10 10v0c-1.16-.02-2.2.85-2.2 2 0 1.15.98 2.01 2.2 2 1.22-.01 2.2-.86 2.2-2 0-1.15-1.03-2.02-2.2-2Z"/><path d="M15.65 8.65A5.5 5.5 0 0 0 12 6c-3.04 0-5.5 2.46-5.5 5.5 0 2.22 1.32 4.13 3.2 5.01"/><path d="M18 6c-1.18 0-2.25.54-2.29 1.35"/><path d="M22 12c0 4.42-3.58 8-8 8a8 8 0 0 1-8-8c0-4.42 3.58-8 8-8 1.18 0 2.29.26 3.32.72"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">金融理财</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">活期、定期、余额宝等理财功能的参与方式与规则</p></div></div></a>
+                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="m12 14 4-4"/><path d="M12 14 8 10"/><path d="M12 14V2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5Z"/><path d="M12 14v8"/><path d="M7 22h10"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">抵押借贷</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">使用加密资产作为抵押，获取 USDT 借贷额度</p></div></div></a>
+                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">推广返佣计划</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">邀请好友赚返佣，查看邀请记录和返佣比</p></div></div></a>
+                               <a href="#" class="info-card bg-white p-4 sm:p-6 rounded-lg border border-gray-200 block"><div class="flex items-start space-x-3 sm:space-x-4"><div class="brand-icon-bg p-2 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div><div><h3 class="font-semibold text-sm sm:text-base">手续费与费率说明</h3><p class="hidden sm:block text-sm text-gray-500 mt-1">吃单/挂单、充提、合约等手续费标准说明</p></div></div></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center mt-6 space-x-4">
+                        <button id="prev-btn" class="carousel-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <div id="carousel-dots" class="flex items-center space-x-2"></div>
+                        <button id="next-btn" class="carousel-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="lg:hidden space-y-4">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-2xl font-bold">常见问题</h2>
+                    <a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a>
+                </div>
+                <div class="accordion-item bg-white rounded-lg border border-gray-200">
+                    <button class="accordion-button w-full flex justify-between items-center p-4 text-left font-semibold">
+                        <span>热门问题</span>
+                        <svg class="chevron-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-4 border-t border-gray-200">
+                            <ul id="zendesk-popular-list-mobile" class="space-y-3"><li>正在加载...</li></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg border border-gray-200">
+                    <button class="accordion-button w-full flex justify-between items-center p-4 text-left font-semibold">
+                        <span>最新发布文章</span>
+                        <svg class="chevron-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div id="zendesk-latest-list-mobile-container" class="p-4 border-t border-gray-200">
+                            <ul class="space-y-4"><li>正在加载...</li></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="hidden lg:block">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">常见问题</h2>
+                    <a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="font-bold text-lg mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text mr-2"><path d="M14 9.5a2.5 2.5 0 0 0-5 0v3.5a2.5 2.5 0 0 0 5 0V10l2-2.5a2.5 2.5 0 0 0-5 0V10l-4.5 4.5a2.5 2.5 0 0 0 5 0v-3a2.5 2.5 0 0 0-5 0V11l2-2.5a2.5 2.5 0 0 0-5 0V11"></path></svg>热门问题</h3>
+                        <ul id="zendesk-popular-list-desktop" class="space-y-4">
+                            <li>正在加载最新文章...</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <h3 class="font-bold text-lg mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="brand-text mr-2"><path d="M5 3v2"></path><path d="M19 3v2"></path><path d="M21 8.5V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8.5"></path><path d="M3 8.5h18"></path><path d="M9 14l2 2 4-4"></path></svg>最新发布文章</h3>
+                        <ul id="zendesk-latest-list-desktop" class="space-y-4">
+                            <li>正在加载最新文章...</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">佰易钱包指南</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">钱包专业模式简介</a></li><li><a href="#">如何使用钱包</a></li></ul></div>
+                <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">实名认证</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">如何完成个人认证</a></li><li><a href="#">企业认证全流程</a></li></ul></div>
+                <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">佰易 C2C 介绍</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">C2C交易介绍</a></li><li><a href="#">提领限额说明</a></li></ul></div>
+                <div class="bg-white p-6 rounded-lg border border-gray-200"><div class="flex justify-between items-center mb-4"><h3 class="font-bold text-lg">安全指南</h3><a href="#" class="text-sm font-medium brand-text brand-hover">更多 &gt;</a></div><ul class="space-y-3"><li><a href="#">2FA 安全提示</a></li><li><a href="#">如何防范网络钓鱼</a></li></ul></div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-center mb-8">需要更多帮助？</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-8 rounded-lg border border-gray-200 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left">
+                        <div>
+                            <h3 class="font-bold text-lg">聊天支持</h3>
+                            <p class="text-gray-500 mt-2">如有任何问题，请随时联系我们。聊天支持团队全天候为您提供服务。</p>
+                            <a href="#" class="text-sm font-medium brand-text brand-hover mt-4 inline-block">查看更多</a>
+                        </div>
+                        <img src="https://i.ibb.co/M51V9Xv2/customer-care.png" alt="聊天支持图标" class="w-20 h-20 mt-4 sm:mt-0 sm:ml-6 object-contain" p-2 bg-white" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e6f9f7/00cfb6?text=Chat';">
+                    </div>
+                     <div class="bg-white p-8 rounded-lg border border-gray-200 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left">
+                        <div>
+                            <h3 class="font-bold text-lg">产品反馈与建议</h3>
+                            <p class="text-gray-500 mt-2">佰易全心聆听您的建议，与您共建美好社区。</p>
+                            <a href="#" class="text-sm font-medium brand-text brand-hover mt-4 inline-block">查看更多</a>
+                        </div>
+                        <img src="https://i.ibb.co/zhWc4fS0/evaluating.png" alt="反馈图标" class="w-20 h-20 mt-4 sm:mt-0 sm:ml-6 object-contain" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e6f9f7/00cfb6?text=Feedback';">
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="border-t border-gray-200 pt-16 pb-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="hidden lg:grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8">
+                    <div>
+                        <h4 class="font-semibold mb-4">社区</h4>
+                        <div class="community-icons flex flex-wrap gap-4">
+                            <a href="#" class="text-gray-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.01,2.02c-5.52,0-10,4.48-10,10s4.48,10,10,10s10-4.48,10-10S17.53,2.02,12.01,2.02z M12.01,19.02 c-3.86,0-7-3.14-7-7s3.14-7,7-7s7,3.14,7,7S15.87,19.02,12.01,19.02z M8.01,11.02v2h8v-2H8.01z"/></svg></a>
+                            <a href="#" class="text-gray-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M22.98,6.88c-0.3-1.12-1.21-2.03-2.33-2.33C18.88,4,12,4,12,4s-6.88,0-8.65,0.55C2.23,4.85,1.32,5.76,1.02,6.88 C0.47,8.65,0.47,12,0.47,12s0,3.35,0.55,5.12c0.3,1.12,1.21,2.03,2.33,2.33C5.12,19.99,12,19.99,12,19.99 s6.88,0,8.65-0.55c1.12-0.3,2.03-1.21,2.33-2.33C23.53,15.35,23.53,12,23.53,12S23.53,8.65,22.98,6.88z M9.53,15.55v-7.1l6.5,3.55 L9.53,15.55z"/></svg></a>
+                            <a href="#" class="text-gray-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24,4.56c-0.88,0.39-1.83,0.65-2.83,0.77c1.02-0.61,1.8-1.58,2.16-2.72c-0.95,0.56-2,0.97-3.13,1.19 c-0.9-0.95-2.17-1.55-3.59-1.55c-2.71,0-4.9,2.19-4.9,4.9c0,0.38,0.04,0.76,0.13,1.12C7.99,9.08,4.24,7.03,1.73,4.15 c-0.44,0.75-0.69,1.63-0.69,2.57c0,1.7,0.86,3.2,2.18,4.08C2.39,10.78,1.6,10.57,0.9,10.2v0.06c0,2.38,1.69,4.36,3.95,4.82 c-0.41,0.11-0.85,0.17-1.3,0.17c-0.32,0-0.63-0.03-0.93-0.09c0.63,1.95,2.44,3.37,4.6,3.41c-1.68,1.32-3.81,2.1-6.12,2.1 c-0.4,0-0.79-0.02-1.18-0.07C2.17,21.29,4.66,22,7.34,22c8.8,0,13.62-7.29,13.62-13.62c0-0.21,0-0.42-0.02-0.62 C22.42,6.43,23.3,5.58,24,4.56z"/></svg></a>
+                        </div>
+                        <div class="flex flex-col items-start space-y-4 mt-6 text-sm">
+                             <div class="relative">
+                                <button id="footer-language-button" class="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                                    <span>简体中文</span>
+                                </button>
+                                <div id="footer-language-dropdown" class="dropdown-menu absolute bottom-full mb-2 z-10 bg-white rounded-md shadow-lg py-1 w-40 border border-gray-200">
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">简体中文</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">English</a>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="font-medium text-gray-700 dark:text-gray-300">黑夜模式</span>
+                                <label for="darkModeSwitchDesktop" class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="darkModeSwitchDesktop" class="sr-only peer">
+                                    <div class="w-12 h-6 bg-gray-300 dark:bg-gray-700 rounded-full peer peer-checked:bg-gray-700 transition-colors"></div>
+                                    <div class="dark-mode-thumb absolute top-[2px] left-[2px] rounded-full h-5 w-5 flex items-center justify-center peer-checked:translate-x-full">
+                                        <svg class="dark-mode-switch-icon sun h-4 w-4 brand-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                                        <svg class="dark-mode-switch-icon moon h-4 w-4 brand-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div><h4 class="font-semibold mb-4">关于我们</h4><ul class="space-y-2"><li><a href="#">关于我们</a></li><li><a href="#">职业机会</a></li><li><a href="#">公告中心</a></li><li><a href="#">新闻中心</a></li></ul></div>
+                    <div><h4 class="font-semibold mb-4">产品</h4><ul class="space-y-2"><li><a href="#">交易所</a></li><li><a href="#">一键买币</a></li><li><a href="#">支付</a></li><li><a href="#">学院</a></li><li><a href="#">直播</a></li></ul></div>
+                    <div><h4 class="font-semibold mb-4">商业</h4><ul class="space-y-2"><li><a href="#">申请CNY认证广告方</a></li><li><a href="#">P2Pro广告方App</a></li><li><a href="#">上市申请</a></li><li><a href="#">机构和VIP服务</a></li></ul></div>
+                    <div><h4 class="font-semibold mb-4">服务</h4><ul class="space-y-2"><li><a href="#">邀请奖励</a></li><li><a href="#">佰易币</a></li><li><a href="#">场外大宗交易</a></li><li><a href="#">历史行情数据</a></li></ul></div>
+                    <div><h4 class="font-semibold mb-4">学习</h4><ul class="space-y-2"><li><a href="#">学习赚币</a></li><li><a href="#">浏览加密货币价格</a></li></ul></div>
+                    <div><h4 class="font-semibold mb-4">帮助</h4><ul class="space-y-2"><li><a href="#">24/7在线客服</a></li><li><a href="#">交易手续费</a></li></ul></div>
+                </div>
+
+                <div class="lg:hidden space-y-2">
+                    <div class="accordion-item"><button class="accordion-button w-full flex justify-between items-center py-2 text-left font-semibold"><span>关于我们</span><svg class="plus-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7h14"/></svg></button><div class="accordion-content pl-4"><ul class="pt-2 space-y-2"><li><a href="#">关于我们</a></li><li><a href="#">职业机会</a></li><li><a href="#">公告中心</a></li><li><a href="#">新闻中心</a></li></ul></div></div>
+                    <div class="accordion-item"><button class="accordion-button w-full flex justify-between items-center py-2 text-left font-semibold"><span>产品</span><svg class="plus-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7h14"/></svg></button><div class="accordion-content pl-4"><ul class="pt-2 space-y-2"><li><a href="#">交易所</a></li><li><a href="#">一键买币</a></li><li><a href="#">支付</a></li><li><a href="#">学院</a></li><li><a href="#">直播</a></li></ul></div></div>
+                    <div class="accordion-item"><button class="accordion-button w-full flex justify-between items-center py-2 text-left font-semibold"><span>商业</span><svg class="plus-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7h14"/></svg></button><div class="accordion-content pl-4"><ul class="pt-2 space-y-2"><li><a href="#">申请CNY认证广告方</a></li><li><a href="#">P2Pro广告方App</a></li><li><a href="#">上市申请</a></li><li><a href="#">机构和VIP服务</a></li></ul></div></div>
+                    <div class="accordion-item"><button class="accordion-button w-full flex justify-between items-center py-2 text-left font-semibold"><span>服务</span><svg class="plus-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7h14"/></svg></button><div class="accordion-content pl-4"><ul class="pt-2 space-y-2"><li><a href="#">邀请奖励</a></li><li><a href="#">佰易币</a></li><li><a href="#">场外大宗交易</a></li><li><a href="#">历史行情数据</a></li></ul></div></div>
+                    <div class="accordion-item"><button class="accordion-button w-full flex justify-between items-center py-2 text-left font-semibold"><span>学习</span><svg class="plus-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7h14"/></svg></button><div class="accordion-content pl-4"><ul class="pt-2 space-y-2"><li><a href="#">学习赚币</a></li><li><a href="#">浏览加密货币价格</a></li></ul></div></div>
+                    <div class="accordion-item"><button class="accordion-button w-full flex justify-between items-center py-2 text-left font-semibold"><span>帮助</span><svg class="plus-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7h14"/></svg></button><div class="accordion-content pl-4"><ul class="pt-2 space-y-2"><li><a href="#">24/7在线客服</a></li><li><a href="#">交易手续费</a></li></ul></div></div>
+                    <div class="py-2">
+                        <h4 class="font-semibold py-2">社区</h4>
+                        <div class="pl-0">
+                            <div class="community-icons flex flex-wrap gap-4">
+                                <a href="#" class="text-gray-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.01,2.02c-5.52,0-10,4.48-10,10s4.48,10,10,10s10-4.48,10-10S17.53,2.02,12.01,2.02z M12.01,19.02 c-3.86,0-7-3.14-7-7s3.14-7,7-7s7,3.14,7,7S15.87,19.02,12.01,19.02z M8.01,11.02v2h8v-2H8.01z"/></svg></a>
+                                <a href="#" class="text-gray-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M22.98,6.88c-0.3-1.12-1.21-2.03-2.33-2.33C18.88,4,12,4,12,4s-6.88,0-8.65,0.55C2.23,4.85,1.32,5.76,1.02,6.88 C0.47,8.65,0.47,12,0.47,12s0,3.35,0.55,5.12c0.3,1.12,1.21,2.03,2.33,2.33C5.12,19.99,12,19.99,12,19.99 s6.88,0,8.65-0.55c1.12-0.3,2.03-1.21,2.33-2.33C23.53,15.35,23.53,12,23.53,12S23.53,8.65,22.98,6.88z M9.53,15.55v-7.1l6.5,3.55 L9.53,15.55z"/></svg></a>
+                                <a href="#" class="text-gray-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24,4.56c-0.88,0.39-1.83,0.65-2.83,0.77c1.02-0.61,1.8-1.58,2.16-2.72c-0.95,0.56-2,0.97-3.13,1.19 c-0.9-0.95-2.17-1.55-3.59-1.55c-2.71,0-4.9,2.19-4.9,4.9c0,0.38,0.04,0.76,0.13,1.12C7.99,9.08,4.24,7.03,1.73,4.15 c-0.44,0.75-0.69,1.63-0.69,2.57c0,1.7,0.86,3.2,2.18,4.08C2.39,10.78,1.6,10.57,0.9,10.2v0.06c0,2.38,1.69,4.36,3.95,4.82 c-0.41,0.11-0.85,0.17-1.3,0.17c-0.32,0-0.63-0.03-0.93-0.09c0.63,1.95,2.44,3.37,4.6,3.41c-1.68,1.32-3.81,2.1-6.12,2.1 c-0.4,0-0.79-0.02-1.18-0.07C2.17,21.29,4.66,22,7.34,22c8.8,0,13.62-7.29,13.62-13.62c0-0.21,0-0.42-0.02-0.62 C22.42,6.43,23.3,5.58,24,4.56z"/></svg></a>
+                            </div>
+                            <div class="flex flex-col items-start space-y-4 mt-6 text-sm">
+                                <button class="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-brand dark:hover:text-brand transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                                    <span>简体中文</span>
+                                </button>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-medium text-gray-700 dark:text-gray-300">黑夜模式</span>
+                                    <label for="darkModeSwitchMobile" class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="darkModeSwitchMobile" class="sr-only peer">
+                                        <div class="w-12 h-6 bg-gray-300 dark:bg-gray-700 rounded-full peer peer-checked:bg-gray-700 transition-colors"></div>
+                                        <div class="dark-mode-thumb absolute top-[2px] left-[2px] rounded-full h-5 w-5 flex items-center justify-center peer-checked:translate-x-full">
+                                            <svg class="dark-mode-switch-icon sun h-4 w-4 brand-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                                            <svg class="dark-mode-switch-icon moon h-4 w-4 brand-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-200 mt-8 pt-6 flex justify-center items-center">
+                    <p class="text-gray-500 text-sm">&copy; 2025 佰易. 版权所有.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Dark Mode Logic ---
+            const darkModeSwitchDesktop = document.getElementById('darkModeSwitchDesktop');
+            const darkModeSwitchMobile = document.getElementById('darkModeSwitchMobile');
+            const navDarkModeToggle = document.getElementById('nav-dark-mode-toggle');
+            const mobileDarkModeToggle = document.getElementById('mobile-dark-mode-toggle');
+
+            const body = document.body;
+
+            const syncSwitches = (isChecked) => {
+                if (darkModeSwitchDesktop) darkModeSwitchDesktop.checked = isChecked;
+                if (darkModeSwitchMobile) darkModeSwitchMobile.checked = isChecked;
+            };
+
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    body.classList.add('dark');
+                    syncSwitches(true);
+                } else {
+                    body.classList.remove('dark');
+                    syncSwitches(false);
+                }
+                // Dispatch a custom event for other scripts (like the carousel) to listen to
+                window.dispatchEvent(new CustomEvent('themeChanged'));
+            };
+            
+            const toggleTheme = () => {
+                const newTheme = body.classList.contains('dark') ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            };
+
+            if (darkModeSwitchDesktop) darkModeSwitchDesktop.addEventListener('change', toggleTheme);
+            if (darkModeSwitchMobile) darkModeSwitchMobile.addEventListener('change', toggleTheme);
+            if (navDarkModeToggle) navDarkModeToggle.addEventListener('click', toggleTheme);
+            if (mobileDarkModeToggle) mobileDarkModeToggle.addEventListener('click', toggleTheme);
+
+
+            // Set initial theme based on saved preference or system setting
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            applyTheme(savedTheme);
+
+            // --- Language Dropdown ---
+            const langButton = document.getElementById('language-menu-button');
+            const langDropdown = document.getElementById('language-dropdown');
+
+            if(langButton && langDropdown) {
+                langButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    langDropdown.classList.toggle('open');
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!langDropdown.contains(e.target) && !langButton.contains(e.target)) {
+                        langDropdown.classList.remove('open');
+                    }
+                });
+            }
+            
+            // --- Mobile Menu ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenuButton.querySelector('svg:first-child').classList.toggle('hidden');
+                    mobileMenuButton.querySelector('svg:last-child').classList.toggle('hidden');
+                });
+            }
+
+
+            // --- Carousel Logic ---
+            const carousel = document.getElementById('self-service-carousel');
+            if (carousel) {
+                const track = document.getElementById('carousel-track');
+                const dotsContainer = document.getElementById('carousel-dots');
+                const prevButton = document.getElementById('prev-btn');
+                const nextButton = document.getElementById('next-btn');
+                
+                if (track && dotsContainer && prevButton && nextButton) {
+                    let originalSlides = Array.from(track.querySelectorAll('.carousel-slide'));
+                    const slideCount = originalSlides.length;
+
+                    if (slideCount <= 1) {
+                        prevButton.style.display = 'none';
+                        nextButton.style.display = 'none';
+                        dotsContainer.style.display = 'none';
+                        return;
+                    }
+
+                    const firstClone = originalSlides[0].cloneNode(true);
+                    const lastClone = originalSlides[slideCount - 1].cloneNode(true);
+                    track.appendChild(firstClone);
+                    track.insertBefore(lastClone, originalSlides[0]);
+
+                    let allSlides = Array.from(track.children);
+                    
+                    let currentIndex = 0; 
+                    let currentTrackIndex = 1;
+                    let autoPlayInterval;
+                    
+                    // --- 滑动逻辑变量 START ---
+                    let isDragging = false;
+                    let isTransitioning = false;
+                    let startPos = { x: 0, y: 0 };
+                    let currentTranslate = 0;
+                    let prevTranslate = 0;
+                    let slideWidth = allSlides[0].offsetWidth;
+                    let animationFrameId;
+                    let isSwipeHorizontal = null; // null: 未决定, true: 水平, false: 垂直
+                    // --- 滑动逻辑变量 END ---
+                    
+                    function setInitialPosition() {
+                        slideWidth = allSlides[0].offsetWidth;
+                        track.style.transition = 'none';
+                        currentTranslate = -slideWidth * currentTrackIndex;
+                        track.style.transform = `translateX(${currentTranslate}px)`;
+                    }
+                    
+                    dotsContainer.innerHTML = '';
+                    for (let i = 0; i < slideCount; i++) {
+                        const dot = document.createElement('button');
+                        dot.classList.add('carousel-dot');
+                        dot.addEventListener('click', () => {
+                            if (isTransitioning) return;
+                            moveToSlide(i);
+                            resetAutoPlay();
+                        });
+                        dotsContainer.appendChild(dot);
+                    }
+                    const dots = Array.from(dotsContainer.children);
+                    
+                    function updateDots() {
+                        dots.forEach((dot, index) => dot.classList.toggle('active', index === currentIndex));
+                    }
+
+                    function setPosition() {
+                        track.style.transform = `translateX(${currentTranslate}px)`;
+                    }
+
+                    function moveToSlide(slideIndex) {
+                        if (isTransitioning) return;
+                        isTransitioning = true;
+                        currentTrackIndex = slideIndex + 1;
+                        track.style.transition = 'transform 0.4s ease-out';
+                        currentTranslate = -currentTrackIndex * slideWidth;
+                        setPosition();
+                    }
+                    
+                    function startAutoPlay() {
+                        clearInterval(autoPlayInterval);
+                        autoPlayInterval = setInterval(() => {
+                            if (isTransitioning || isDragging) return;
+                            isTransitioning = true;
+                            currentTrackIndex++;
+                            track.style.transition = 'transform 0.4s ease-out';
+                            currentTranslate = -currentTrackIndex * slideWidth;
+                            setPosition();
+                        }, 5000);
+                    }
+
+                    function resetAutoPlay() {
+                        startAutoPlay();
+                    }
+
+                    nextButton.addEventListener('click', () => {
+                        if (isTransitioning) return;
+                        isTransitioning = true;
+                        currentTrackIndex++;
+                        track.style.transition = 'transform 0.4s ease-out';
+                        currentTranslate = -currentTrackIndex * slideWidth;
+                        setPosition();
+                        resetAutoPlay();
+                    });
+
+                    prevButton.addEventListener('click', () => {
+                        if (isTransitioning) return;
+                        isTransitioning = true;
+                        currentTrackIndex--;
+                        track.style.transition = 'transform 0.4s ease-out';
+                        currentTranslate = -currentTrackIndex * slideWidth;
+                        setPosition();
+                        resetAutoPlay();
+                    });
+
+                    track.addEventListener('transitionend', () => {
+                        isTransitioning = false;
+                        if (currentTrackIndex <= 0) {
+                            track.style.transition = 'none';
+                            currentTrackIndex = slideCount;
+                            currentTranslate = -currentTrackIndex * slideWidth;
+                            setPosition();
+                        } else if (currentTrackIndex >= allSlides.length - 1) {
+                            track.style.transition = 'none';
+                            currentTrackIndex = 1;
+                            currentTranslate = -currentTrackIndex * slideWidth;
+                            setPosition();
+                        }
+                        currentIndex = currentTrackIndex - 1;
+                        updateDots();
+                    });
+
+                    // --- 优化后的滑动事件监听 START ---
+                    track.addEventListener('mousedown', dragStart);
+                    track.addEventListener('touchstart', dragStart, { passive: false }); // 关键: 允许 preventDefault
+
+                    track.addEventListener('mousemove', drag);
+                    track.addEventListener('touchmove', drag, { passive: false }); // 关键: 允许 preventDefault
+
+                    track.addEventListener('mouseup', dragEnd);
+                    track.addEventListener('mouseleave', dragEnd);
+                    track.addEventListener('touchend', dragEnd);
+                    // --- 优化后的滑动事件监听 END ---
+
+                    function dragStart(e) {
+                        if (isTransitioning) return;
+                        isDragging = true;
+                        isSwipeHorizontal = null; // 重置滑动方向
+                        startPos = { x: getPositionX(e), y: getPositionY(e) };
+                        clearInterval(autoPlayInterval);
+                        track.style.transition = 'none';
+                        track.style.cursor = 'grabbing';
+                        prevTranslate = currentTranslate;
+                        animationFrameId = requestAnimationFrame(animation);
+                    }
+
+                    function drag(e) {
+                        if (isDragging) {
+                            const currentPos = { x: getPositionX(e), y: getPositionY(e) };
+                            const deltaX = Math.abs(currentPos.x - startPos.x);
+                            const deltaY = Math.abs(currentPos.y - startPos.y);
+
+                            if (isSwipeHorizontal === null) {
+                                // 只有在移动超过一定阈值后才判断方向
+                                if (deltaX > 5 || deltaY > 5) {
+                                    isSwipeHorizontal = deltaX > deltaY;
+                                }
+                            }
+
+                            if (isSwipeHorizontal) {
+                                e.preventDefault(); // 如果是水平滑动，阻止页面垂直滚动
+                                currentTranslate = prevTranslate + currentPos.x - startPos.x;
+                            }
+                        }
+                    }
+
+                    function animation() {
+                        if (!isDragging) return;
+                        setPosition();
+                        requestAnimationFrame(animation);
+
+                    }
+
+                    function dragEnd(e) {
+                        cancelAnimationFrame(animationFrameId);
+                        const wasHorizontal = isSwipeHorizontal;
+                        isSwipeHorizontal = null;
+
+                        if (!isDragging) return;
+                        
+                        isDragging = false;
+                        track.style.cursor = 'grab';
+
+                        // 如果不是水平滑动，则不执行后续逻辑，并重启自动播放
+                        if (!wasHorizontal) {
+                            resetAutoPlay();
+                            return;
+                        }
+
+                        const movedBy = currentTranslate - prevTranslate;
+
+                        if (movedBy < -50 && currentTrackIndex < allSlides.length - 1) {
+                            currentTrackIndex++;
+                        } else if (movedBy > 50 && currentTrackIndex > 0) {
+                            currentTrackIndex--;
+                        }
+                        
+                        isTransitioning = true;
+                        track.style.transition = 'transform 0.4s ease-out';
+                        currentTranslate = -currentTrackIndex * slideWidth;
+                        setPosition();
+                        resetAutoPlay();
+                    }
+
+                    function getPositionX(e) {
+                        return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+                    }
+
+                    function getPositionY(e) {
+                        return e.type.includes('mouse') ? e.pageY : e.touches[0].clientY;
+                    }
+
+                    const handleResize = () => {
+                        setInitialPosition();
+                    };
+
+                    window.addEventListener('resize', handleResize);
+                    window.addEventListener('themeChanged', handleResize);
+
+                    setInitialPosition();
+                    updateDots();
+                    startAutoPlay();
+                }
+            }
+
+            // --- Accordion Logic ---
+            const accordionItems = document.querySelectorAll('.accordion-item');
+            accordionItems.forEach(item => {
+                const button = item.querySelector('.accordion-button');
+                const content = item.querySelector('.accordion-content');
+                
+                if (!button || !content) return;
+
+                button.addEventListener('click', () => {
+                    const isOpen = button.classList.contains('open');
+                    
+                    const parentGroup = button.closest('.space-y-2');
+                    if (parentGroup) {
+                        parentGroup.querySelectorAll('.accordion-item').forEach(otherItem => {
+                            const otherButton = otherItem.querySelector('.accordion-button');
+                            const otherContent = otherItem.querySelector('.accordion-content');
+                            if (otherButton && otherButton !== button && otherButton.classList.contains('open')) {
+                                otherButton.classList.remove('open');
+                                otherContent.style.maxHeight = null;
+                            }
+                        });
+                    }
+
+                    if (isOpen) {
+                        button.classList.remove('open');
+                        content.style.maxHeight = null;
+                    } else {
+                        button.classList.add('open');
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+        });
+
+        // --- Zendesk API Logic ---
+        document.addEventListener('DOMContentLoaded', function () {
+            const zendeskSubdomain = '100ex'; 
+            const proxyUrl = 'https://corsproxy.io/?';
+            const popularSectionIds = ['46041105078553'];
+
+            const fetchAndRenderArticles = (endpoint, desktopListEl, mobileListEl, renderFunc) => {
+                if (!desktopListEl || !mobileListEl) {
+                    if(desktopListEl) desktopListEl.innerHTML = '<li>代码错误：列表元素未找到。</li>';
+                    if(mobileListEl) mobileListEl.innerHTML = '<li>代码错误：列表元素未找到。</li>';
+                    return;
+                }
+
+                const zendeskApiUrl = `https://${zendeskSubdomain}.zendesk.com/api/v2/help_center/zh-cn/${endpoint}`;
+                const apiUrl = proxyUrl + encodeURIComponent(zendeskApiUrl);
+
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                        return response.json();
+                    })
+                    .then(data => {
+                        desktopListEl.innerHTML = '';
+                        mobileListEl.innerHTML = '';
+                        
+                        const articles = data.articles;
+
+                        if (articles && articles.length > 0) {
+                            articles.forEach((article, index) => {
+                                renderFunc(article, index, desktopListEl, mobileListEl);
+                            });
+                        } else {
+                            const noArticlesMsg = '<li>暂无文章。</li>';
+                            desktopListEl.innerHTML = noArticlesMsg;
+                            mobileListEl.innerHTML = noArticlesMsg;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching Zendesk articles:', error);
+                        const errorMsg = '<li>加载文章失败。</li>';
+                        desktopListEl.innerHTML = errorMsg;
+                        mobileListEl.innerHTML = errorMsg;
+                    });
+            };
+
+            const renderLatestArticle = (article, index, desktopList, mobileList) => {
+                const date = new Date(article.created_at);
+                const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                
+                const desktopItem = document.createElement('li');
+                desktopItem.innerHTML = `<a href="${article.html_url}" target="_blank" class="block">${article.title}</a><p class="text-sm text-gray-500 mt-1">${formattedDate}</p>`;
+                desktopList.appendChild(desktopItem);
+
+                const mobileItem = document.createElement('li');
+                mobileItem.innerHTML = `<a href="${article.html_url}" target="_blank" class="block">${article.title}</a><p class="text-sm text-gray-400 mt-1">${formattedDate}</p>`;
+                mobileList.appendChild(mobileItem);
+            };
+
+            const renderPopularArticle = (article, index, desktopList, mobileList) => {
+                const desktopItem = document.createElement('li');
+                desktopItem.className = 'flex items-start';
+                desktopItem.innerHTML = `<span class="text-gray-400 mr-3">${index + 1}</span><a href="${article.html_url}" target="_blank">${article.title}</a>`;
+                desktopList.appendChild(desktopItem);
+
+                const mobileItem = document.createElement('li');
+                mobileItem.innerHTML = `<a href="${article.html_url}" target="_blank">${article.title}</a>`;
+                mobileList.appendChild(mobileItem);
+            };
+
+            const latestDesktopList = document.getElementById('zendesk-latest-list-desktop');
+            const latestMobileContainer = document.getElementById('zendesk-latest-list-mobile-container');
+            const latestMobileList = latestMobileContainer ? latestMobileContainer.querySelector('ul') : null;
+            fetchAndRenderArticles('articles.json?sort_by=created_at&sort_order=desc&per_page=3', latestDesktopList, latestMobileList, renderLatestArticle);
+
+            const popularDesktopList = document.getElementById('zendesk-popular-list-desktop');
+            const popularMobileList = document.getElementById('zendesk-popular-list-mobile');
+            
+            if (popularSectionIds && popularSectionIds.length > 0) {
+                const randomSectionId = popularSectionIds[Math.floor(Math.random() * popularSectionIds.length)];
+                const popularArticlesEndpoint = `sections/${randomSectionId}/articles.json?per_page=5`;
+                fetchAndRenderArticles(popularArticlesEndpoint, popularDesktopList, popularMobileList, renderPopularArticle);
+            } else {
+                const msg = '<li>请在代码中设置一个或多个Section ID。</li>';
+                if(popularDesktopList) popularDesktopList.innerHTML = msg;
+                if(popularMobileList) popularMobileList.innerHTML = msg;
+            }
+        });
+    </script>
+
+</body>
+</html>
